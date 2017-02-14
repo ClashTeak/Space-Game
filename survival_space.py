@@ -3,14 +3,13 @@ from pygame.locals import *
 from math import cos,sin,pi
 import sys
 import random
-from survival_space_shop import *
 
 
 pygame.init()
 pygame.mixer.init()
 
-pygame.mixer.music.load("C:\\Users\\michael\\Desktop\\son_pour_jeu_video\\music_8bit_embience.ogg")
-pygame.mixer.music.queue("C:\\Users\\michael\\Desktop\\son_pour_jeu_video\\music_8bit_embience.ogg")
+pygame.mixer.music.load("Data/sounds/music_8bit_embience.ogg")
+pygame.mixer.music.queue("Data/sounds/music_8bit_embience.ogg")
 #~ pygame.mixer.music.queue("C:\\Users\\michael\\Music\\musique_jeu_spatiale.ogg")
 pygame.mixer.music.set_volume(100)
 pygame.mixer.music.play()
@@ -33,8 +32,8 @@ VIT_LASER = 10
 VIT_TIRS = 7
 
 
-etoile_img = pygame.image.load("C:\\Users\\michael\\Pictures\\etoile.png")
-etoile_img2 = pygame.image.load("C:\\Users\\michael\\Pictures\\etoile_vitesse_lumiere.png")
+etoile_img = pygame.image.load("Data/Pictures/etoile.png")
+etoile_img2 = pygame.image.load("Data/Pictures/etoile_vitesse_lumiere.png")
 
 taille_x_vaisseau = 300
 taille_y_vaisseau = 300
@@ -53,34 +52,32 @@ vaisseau_anim5 = pygame.transform.scale(pygame.image.load("C:\\Users\\michael\\P
 munition_box = pygame.transform.scale(pygame.image.load("C:\\Users\\michael\\Pictures\\caisse_de_munition.png"),(100,100))
 munition_box_despawn = pygame.transform.scale(pygame.image.load("C:\\Users\\michael\\Pictures\\caisse_de_munition_despawn.png"),(100,100))
 
-player1 = pygame.image.load('C:\\Users\\michael\\Pictures\\vaisseau.png')
-player1_gauche = pygame.image.load("C:\\Users\\michael\\Pictures\\vaisseau_gauche.png")
-player1_droite = pygame.image.load("C:\\Users\\michael\\Pictures\\vaisseau_droite.png")
-player2 = pygame.image.load("C:\\Users\\michael\\Pictures\\vesseau_p2.png")
-fond_espace = pygame.image.load("C:\\Users\\michael\\Pictures\\fond_espace.png")
+player1 = pygame.image.load("Data/Pictures/vaisseau.png")
+player1_gauche = pygame.image.load("Data/Pictures/vaisseau_gauche.png")
+player1_droite = pygame.image.load("Data/Pictures/vaisseau_droite.png")
 asteoride = pygame.image.load("C:\\Users\\michael\\Pictures\\pixel art\\Asteroid.png")
 laser = pygame.image.load("C:\\Users\\michael\\Pictures\\laser.png")
 caisse_de_munition = pygame.image.load("C:\\Users\\michael\\Pictures\\caisse_de_munition.png")
 logo_munition = pygame.image.load("C:\\Users\\michael\\Pictures\\logo_munition.png")
 
-son_reacteur = pygame.mixer.Sound("C:\\Users\\michael\\Music\\son_vaisseau_terminer.wav")
-son_tire_laser = pygame.mixer.Sound("C:\\Users\\michael\\Music\\tire_laser.ogg")
-son_explosion = pygame.mixer.Sound('C:\\Users\\michael\\Music\\explosion_vaisseau.ogg')
-son_explosion2 = pygame.mixer.Sound('C:\\Users\\michael\\Music\\explosion2_arcade.wav')
-son_game_over = pygame.mixer.Sound("C:\\Users\\michael\\Music\\Gameover_arcade.wav")
-level_up = pygame.mixer.Sound("C:\\Users\\michael\\Music\\levelup.wav")
-speed_vaisseau = pygame.mixer.Sound("C:\\Users\\michael\\Desktop\\son_pour_jeu_video\\speed_vaisseau.OGG")
-son_caisse_munition = pygame.mixer.Sound("C:\\Users\\michael\Desktop\\son_pour_jeu_video\\munition_reload.OGG")
+son_reacteur = pygame.mixer.Sound("Data/sounds/son_vaisseau_terminer.wav")
+son_tire_laser = pygame.mixer.Sound("Data/sounds/tire_laser.ogg")
+son_explosion = pygame.mixer.Sound("Data/sounds/explosion_vaisseau.ogg")
+son_explosion2 = pygame.mixer.Sound("Data/sounds/explosion2_arcade.wav")
+son_game_over = pygame.mixer.Sound("Data/sounds/Gameover_arcade.wav")
+level_up = pygame.mixer.Sound("Data/sounds/levelup.wav")
+speed_vaisseau = pygame.mixer.Sound("Data/sounds/speed_vaisseau.OGG")
+son_caisse_munition = pygame.mixer.Sound("Data/sounds/munition_reload.OGG")
 
 
-explosion1 = pygame.transform.scale(pygame.image.load("C:\\Users\\michael\\Pictures\\explosion1.png"),(150,150))
-explosion2 = pygame.transform.scale(pygame.image.load("C:\\Users\\michael\\Pictures\\explosion2.png"),(150,150))
-explosion3 = pygame.transform.scale(pygame.image.load("C:\\Users\\michael\\Pictures\\explosion3.png"),(150,150))
-explosion4 = pygame.transform.scale(pygame.image.load("C:\\Users\\michael\\Pictures\\explosion4.png"),(150,150))
-explosion5 = pygame.transform.scale(pygame.image.load("C:\\Users\\michael\\Pictures\\explosion5.png"),(150,150))
-explosion6 = pygame.transform.scale(pygame.image.load("C:\\Users\\michael\\Pictures\\explosion6.png"),(150,150))
-explosion7 = pygame.transform.scale(pygame.image.load("C:\\Users\\michael\\Pictures\\explosion7.png"),(150,150))
-explosion8 = pygame.transform.scale(pygame.image.load("C:\\Users\\michael\\Pictures\\explosion8.png"),(150,150))
+explosion1 = pygame.transform.scale(pygame.image.load("Data/Pictures/sprite/explosion1.png"),(150,150))
+explosion2 = pygame.transform.scale(pygame.image.load("Data/Pictures/sprite/explosion2.png"),(150,150))
+explosion3 = pygame.transform.scale(pygame.image.load("Data/Pictures/sprite/explosion3.png"),(150,150))
+explosion4 = pygame.transform.scale(pygame.image.load("Data/Pictures/sprite/explosion4.png"),(150,150))
+explosion5 = pygame.transform.scale(pygame.image.load("Data/Pictures/sprite/explosion5.png"),(150,150))
+explosion6 = pygame.transform.scale(pygame.image.load("Data/Pictures/sprite/explosion6.png"),(150,150))
+explosion7 = pygame.transform.scale(pygame.image.load("Data/Pictures/sprite/explosion7.png"),(150,150))
+explosion8 = pygame.transform.scale(pygame.image.load("Data/Pictures/sprite/explosion8.png"),(150,150))
 
 
 continuer = True
@@ -679,7 +676,6 @@ def reset():
 
 continuer_interface_shop = True
 
-cadre_shop = pygame.image.load("C:\\Users\\michael\\Pictures\\cadre_shop.png")
 
 def interface_shop():
 	global continuer_interface_shop
@@ -776,24 +772,24 @@ def interface():
 	global titre_y_change
 	global cpt_titre_x
 	global cpt_titre_y
-	boutton_quitter2 = pygame.image.load("C:\\Users\\michael\\Pictures\\boutton_quitter_swagg.png")
+	boutton_quitter2 = pygame.image.load("Data/Pictures/Bouttons/boutton_quitter_swagg.png")
 	boutton_quitter = boutton_quitter2
-	boutton_quitter_select = pygame.image.load("C:\\Users\\michael\\Pictures\\boutton_quitter_swagg_select.png")
-	boutton_quitter_apuyer = pygame.image.load("C:\\Users\\michael\\Pictures\\boutton_quitter_apuyer.png")
+	boutton_quitter_select = pygame.image.load("Data/Pictures/Bouttons/boutton_quitter_swagg_select.png")
+	boutton_quitter_apuyer = pygame.image.load("Data/Pictures/Bouttons/boutton_quitter_apuyer.png")
 	
 	
 	img_vaisseau = vaisseau_anim1
 	
-	boutton_play2 = pygame.image.load("C:\\Users\\michael\\Pictures\\boutton_play_swagg.png")
+	boutton_play2 = pygame.image.load("Data/Pictures/Bouttons/boutton_play_swagg.png")
 	boutton_play = boutton_play2
-	boutton_play_apuyer = pygame.image.load("C:\\Users\\michael\\Pictures\\boutton_play_apuyer.png")
-	boutton_play_select = pygame.image.load("C:\\Users\\michael\\Pictures\\boutton_play_swagg_select.png")
+	boutton_play_apuyer = pygame.image.load("Data/Pictures/Bouttons/boutton_play_apuyer.png")
+	boutton_play_select = pygame.image.load("Data/Pictures/Bouttons/boutton_play_swagg_select.png")
 	
-	boutton_anim_play = pygame.image.load("C:\\Users\\michael\\Pictures\\boutton_play_swagg.png")
-	boutton_anim_play_select = pygame.image.load("C:\\Users\\michael\\Pictures\\boutton_play_swagg_select.png")
+	boutton_anim_play = pygame.image.load("Data/Pictures/Bouttons/boutton_play_swagg.png")
+	boutton_anim_play_select = pygame.image.load("Data/Pictures/Bouttons/boutton_play_swagg_select.png")
 	
-	boutton_shop_img = pygame.image.load("C:\\Users\\michael\\Pictures\\boutton_shop_swagg.png")
-	boutton_shop_select = pygame.image.load("C:\\Users\\michael\\Pictures\\boutton_shop_swagg_select.png")
+	boutton_shop_img = pygame.image.load("Data/Pictures/Bouttons/boutton_shop_swagg.png")
+	boutton_shop_select = pygame.image.load("Data/Pictures/Bouttons/boutton_shop_swagg_select.png")
 	boutton_shop = boutton_shop_img
 	
 	bloc_select_play = False
