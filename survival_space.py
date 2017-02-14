@@ -55,9 +55,8 @@ munition_box_despawn = pygame.transform.scale(pygame.image.load("Data/Pictures/c
 player1 = pygame.image.load("Data/Pictures/vaisseau.png")
 player1_gauche = pygame.image.load("Data/Pictures/vaisseau_gauche.png")
 player1_droite = pygame.image.load("Data/Pictures/vaisseau_droite.png")
-asteoride = pygame.image.load("C:\\Users\\michael\\Pictures\\pixel art\\Asteroid.png")
+asteoride = pygame.image.load("Data/Pictures/Asteroid.png")
 laser = pygame.image.load("Data/Pictures/laser.png")
-caisse_de_munition = pygame.image.load("C:\\Users\\michael\\Pictures\\caisse_de_munition.png")
 logo_munition = pygame.image.load("Data/Pictures/logo_munition.png")
 
 son_reacteur = pygame.mixer.Sound("Data/sounds/son_vaisseau_terminer.wav")
