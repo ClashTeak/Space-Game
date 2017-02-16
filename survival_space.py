@@ -155,14 +155,14 @@ def mort():
 	continuer_mort = True
 	
 	police = pygame.font.SysFont("arial",200)
-	arial2 = pygame.font.SysFont("arial",50)
+	arial2 = pygame.font.SysFont("arial",55)
 	affiche = police.render("GAME OVER",True,white)
-	affiche2 = arial2.render("APPUYER SUR RETOUR POUR RECOMMENCER",True,white)
+	affiche2 = arial2.render("PRESS RETURN TO RETRY",True,white)
 	
 	cpt_mort -= 1
 	
 	Map.blit(affiche,(70,200))
-	Map.blit(affiche2,(150,500))
+	Map.blit(affiche2,(300,450))
 	espace_mode_mort = True
 
 
@@ -290,21 +290,21 @@ class Explosion(pygame.sprite.Sprite):
 	
 	def animation(self):
 		self.cpt += 1
-		if self.cpt == 3:
+		if self.cpt == 4:
 			self.image = explosion1
-		if self.cpt == 6:
+		if self.cpt == 8:
 			self.image = explosion2
-		if self.cpt == 9:
-			self.image = explosion3
 		if self.cpt == 12:
-			self.image = explosion4
+			self.image = explosion3
 		if self.cpt == 15:
-			self.image = explosion5
+			self.image = explosion4
 		if self.cpt == 18:
-			self.image = explosion6
+			self.image = explosion5
 		if self.cpt == 21:
-			self.image = explosion7
+			self.image = explosion6
 		if self.cpt == 24:
+			self.image = explosion7
+		if self.cpt == 27:
 			self.image = explosion8
 
 explosion = Explosion([])
@@ -312,12 +312,18 @@ grp_e = pygame.sprite.Group([explosion])
 
 class Asteroide(pygame.sprite.Sprite):
 	
+	
+	
 	def __init__(self):
 		self.x, self.y = 0,2
 		self.vx = rtd(10)-5
 		self.vy = rtd(10)-5
 		self.angle = 0
 		self.va = pi/80
+		
+		self.taille_x = random.random()+0.6
+		self.taille_y = self.taille_x
+		
 		
 		pygame.sprite.Sprite.__init__(self)
 		self.update()
@@ -327,11 +333,15 @@ class Asteroide(pygame.sprite.Sprite):
 		self.y = (self.y + self.vy)%1000
 		self.angle = (self.angle + self.va)
 		
-		self.image = pygame.transform.rotate(asteoride,rad2deg(self.angle))
+		#~ self.taille_x = random.randint(0,2)
+		#~ self.taille_y = self.taille_x
+		
+		self.image = pygame.transform.rotozoom(asteoride,rad2deg(self.angle),self.taille_x)
 		
 		self.rect = (int(self.x),int(self.y),self.image.get_width(),self.image.get_height())
 		self.mask = pygame.mask.from_surface(self.image)
 
+asteroide = Asteroide()
 asteroides = []
 
 
@@ -998,6 +1008,7 @@ def interface():
 		window.blit(Map,(x_Map,y_Map))
 		pygame.display.update()
 		joueur.update()
+		clock.tick(70)
 				
 				
 interface()
@@ -1013,7 +1024,9 @@ cpt_triche = 50
 
 tableau_box_munition.append(Caisse_munition())
 
+
 while continuer:
+	
 	
 	for c in tableau_box_munition:
 		if c.vx == 0:
@@ -1033,7 +1046,8 @@ while continuer:
 		for l in joueur.tirs:
 			if pygame.sprite.collide_mask(c,l) != None:
 				joueur.tirs.remove(l)
-				tableau_box_munition.remove(c)
+				if c in tableau_box_munition:
+					tableau_box_munition.remove(c)
 			
 	
 	for c in tableau_box_munition:
@@ -1362,9 +1376,9 @@ while continuer:
 	affiche3 = arial4.render("Score: "+str(score),True,white)
 	affiche4 = arial4.render("x "+str(joueur.MUNITION),True,white)
 	if DIFFICULTER_TOTAL < 8:
-		affiche5 = arial3.render("Niveau de Difficulté: "+str(DIFFICULTER_TOTAL),True,white)
+		affiche5 = arial3.render("Difficulty Level: "+str(DIFFICULTER_TOTAL),True,white)
 	if DIFFICULTER_TOTAL == 8:
-		affiche5 = arial3.render("Niveau de Difficulté: Max",True,white)
+		affiche5 = arial3.render("Difficulty Level: Max",True,white)
 	
 	Map.blit(affiche3,(10,10))
 	Map.blit(logo_munition,(10,50))
