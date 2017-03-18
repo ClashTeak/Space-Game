@@ -162,7 +162,7 @@ def mort():
 	cpt_mort -= 1
 	
 	Map.blit(affiche,(70,200))
-	Map.blit(affiche2,(300,450))
+	Map.blit(affiche2,(310,450))
 	espace_mode_mort = True
 
 
@@ -321,7 +321,7 @@ class Asteroide(pygame.sprite.Sprite):
 		self.angle = 0
 		self.va = pi/80
 		
-		self.taille_x = random.random()+0.6
+		self.taille_x = random.random()+0.55
 		self.taille_y = self.taille_x
 		
 		
@@ -1386,8 +1386,8 @@ while continuer:
 	Map.blit(affiche5,(500,10))
 	if espace_mode_mort:
 		if cpt_tremblement > 1:
-			x_Map = random.randint(-20,50)
-			y_Map = random.randint(-20,50)
+			x_Map = random.randint(-30,50)
+			y_Map = random.randint(-30,50)
 			cpt_tremblement -= 1
 		else:
 			x_Map = 0
