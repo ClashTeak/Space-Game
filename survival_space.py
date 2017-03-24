@@ -85,6 +85,8 @@ espace_mode_mort = False
 cpt_mort = 100
 
 score = 0
+nb_coins = 0
+str_coins = ""
 	
 x_Map = 0
 y_Map = 0
@@ -99,6 +101,23 @@ x_boutton_quit = 1150
 y_boutton_play = 520
 y_boutton_shop = 620
 y_boutton_quit = 720
+
+
+def lire_fichier_coins(fichier):
+	
+	with open(fichier,"r") as fichier:
+		total_coins = fichier.read()
+		
+	return total_coins
+
+coins_joueur = int(lire_fichier_coins("coins"))
+
+def enregistrer_coins(fichier):
+	
+	with open(fichier,"w") as f:
+		f.write(coins_joueur)
+
+
 
 class Etoile(pygame.sprite.Sprite):
 	
@@ -1175,6 +1194,8 @@ while continuer:
 	if appui[K_ESCAPE]:
 		if espace_mode_mort == False:
 			reset()
+			coins_joueur += nb_coins
+			enregistrer_coins("coins")
 			continuer_interface = True
 			for e in nb_etoile:
 				e.image = etoile_img2
@@ -1247,6 +1268,8 @@ while continuer:
 		
 	for event in pygame.event.get():
 		if event.type == QUIT:
+			coins_joueur += nb_coins
+			enregistrer_coins("coins")
 			pygame.quit()
 			sys.exit()
 		if event.type == KEYDOWN:
@@ -1301,11 +1324,17 @@ while continuer:
 		for a in asteroides:
 			if pygame.sprite.collide_mask(a,l) != None:
 				score += 1
+				if int(a.taille_x) >= 1:
+					nb_coins += int(a.taille_x)
+				else:
+					nb_coins += 1
 				asteroides_detruits.append(a)
 				NB_ASTEROIDE -= 1
 				lasers_perdus.append(l)
 		if l.x < 0 or l.x > 1400 or l.y < 0 or l.y > 1000:
 			lasers_perdus.append(l)
+	
+	print(nb_coins)
 	
 	for a in asteroides_detruits:
 		if a in asteroides:
@@ -1357,6 +1386,8 @@ while continuer:
 				if  pygame.sprite.collide_mask(a,joueur) != None:
 					pygame.mixer.music.stop()
 					son_tire_laser.stop()
+					coins_joueur += nb_coins
+					enregistrer_coins("coins")
 					son_reacteur.stop()
 					son_explosion2.play()
 					son_game_over.play()
