@@ -106,16 +106,17 @@ y_boutton_quit = 720
 def lire_fichier_coins(fichier):
 	
 	with open(fichier,"r") as fichier:
-		total_coins = fichier.read()
+		total_coins = fichier.readline().strip()
+		print(total_coins, type(total_coins))
 		
-	return total_coins
+	return int(total_coins)
 
-coins_joueur = int(lire_fichier_coins("coins"))
+coins_joueur = lire_fichier_coins("coins")
 
 def enregistrer_coins(fichier):
 	
 	with open(fichier,"w") as f:
-		f.write(coins_joueur)
+		f.write(str(coins_joueur))
 
 
 
@@ -157,6 +158,11 @@ temps_etoile = random.randint(100,300)
 etoile_detruite = []
 
 arial3 = pygame.font.SysFont("arial",taille_texte_niveau)
+arial4 = pygame.font.SysFont("arial",35)
+arial7 = pygame.font.SysFont("arial",60)
+
+affiche_nb_coins = arial7.render("x "+str(coins_joueur),True,white)
+
 continuer_grossir = True
 continuer_retressir = False
 cpt_retressir = 10
@@ -820,6 +826,8 @@ def interface():
 	boutton_shop_select = pygame.image.load("Data/Pictures/Bouttons/boutton_shop_swagg_select.png")
 	boutton_shop = boutton_shop_img
 	
+	coins = pygame.image.load("Data/Pictures/coins.png")
+	
 	bloc_select_play = False
 	bloc_select_quitter = False
 	
@@ -1023,6 +1031,8 @@ def interface():
 		Map.blit(Titre_jeu_noir,(titre_x-7,titre_y))
 		Map.blit(Titre_jeu_blanc,(titre_x,titre_y))
 		Map.blit(img_vaisseau,(x_vaisseau_anim,y_vaisseau_anim))
+		Map.blit(coins,(25,820))
+		Map.blit(affiche_nb_coins,(170,870))
 		#~ window.blit(vaisseau_anim,(x_vaisseau_anim,300))
 		window.blit(Map,(x_Map,y_Map))
 		pygame.display.update()
@@ -1195,7 +1205,9 @@ while continuer:
 		if espace_mode_mort == False:
 			reset()
 			coins_joueur += nb_coins
+			affiche_nb_coins = arial7.render("x "+str(coins_joueur),True,white)
 			enregistrer_coins("coins")
+			nb_coins = 0
 			continuer_interface = True
 			for e in nb_etoile:
 				e.image = etoile_img2
@@ -1269,7 +1281,9 @@ while continuer:
 	for event in pygame.event.get():
 		if event.type == QUIT:
 			coins_joueur += nb_coins
+			affiche_nb_coins = arial7.render("x "+str(coins_joueur),True,white)
 			enregistrer_coins("coins")
+			nb_coins = 0
 			pygame.quit()
 			sys.exit()
 		if event.type == KEYDOWN:
@@ -1387,7 +1401,9 @@ while continuer:
 					pygame.mixer.music.stop()
 					son_tire_laser.stop()
 					coins_joueur += nb_coins
+					affiche_nb_coins = arial7.render("x "+str(coins_joueur),True,white)
 					enregistrer_coins("coins")
+					nb_coins = 0
 					son_reacteur.stop()
 					son_explosion2.play()
 					son_game_over.play()
@@ -1403,7 +1419,6 @@ while continuer:
 		
 	
 	
-	arial4 = pygame.font.SysFont("arial",35)
 	affiche3 = arial4.render("Score: "+str(score),True,white)
 	affiche4 = arial4.render("x "+str(joueur.MUNITION),True,white)
 	if DIFFICULTER_TOTAL < 8:
