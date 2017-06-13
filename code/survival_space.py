@@ -225,7 +225,7 @@ class J1(pygame.sprite.Sprite):
 	
 	def __init__(self):
 		self.x, self.y = 0,500
-		self.vx, self.vy = -15,0
+		self.vx, self.vy = 0,0
 		self.angle = 0
 		self.tirs = []
 		self.tourner_gauche = False
@@ -728,7 +728,16 @@ def interface_shop():
 	boutton_back = boutton_back2
 	boutton_back_select = pygame.image.load("Data/Pictures/Bouttons/boutton_back_swagg_select.png")
 	
+	boutton_back_x = 1150
+	boutton_back_y = 800
+	
 	bleu_contour = pygame.Color(34,255,250)
+	
+	def button_back(x,y):
+		if x > 1150 and x < 1400:
+			if y > 798 and y < 850:
+				return True
+		return False
 	
 	while continuer_interface_shop:
 		
@@ -750,9 +759,22 @@ def interface_shop():
 			if event.type == QUIT:
 				pygame.quit()
 				sys.exit()
+			if event.type == MOUSEBUTTONDOWN:
+				if event.button == 1:
+					continuer_interface_shop = False
+			
 			if event.type == MOUSEMOTION:
 				
 				x,y = pygame.mouse.get_pos()
+				
+				if button_back(x,y):
+					boutton_back = boutton_back_select
+					boutton_back_x = 900
+					boutton_back_y = 780
+				else:
+					boutton_back = boutton_back2
+					boutton_back_x = 1150
+					boutton_back_y = 800
 		
 		Map.fill(space_blue)
 		for e in nb_etoile:
@@ -773,7 +795,7 @@ def interface_shop():
 		pygame.draw.rect(Map,bleu_contour,(100,250, 700, 10))
 		pygame.draw.rect(Map,bleu_contour,(100,950, 700, 10))
 		pygame.draw.rect(Map,bleu_contour,(100,200, 710, 10))
-		Map.blit(boutton_back,(1150,800))
+		Map.blit(boutton_back,(boutton_back_x,boutton_back_y))
 		window.blit(Map,(0,0))
 		pygame.display.update()
 		clock.tick(100)
@@ -818,6 +840,7 @@ def interface():
 	global titre_y
 	global titre_y_change
 	global cpt_titre_x
+	global continuer_interface_shop
 	global cpt_titre_y
 	boutton_quitter2 = pygame.image.load("Data/Pictures/Bouttons/boutton_quitter_swagg.png")
 	boutton_quitter = boutton_quitter2
@@ -922,6 +945,8 @@ def interface():
 						sys.exit()
 					
 					if button_shop(x,y):
+						continuer_interface_shop = True
+						boutton_shop = boutton_shop_img
 						interface_shop()
 						
 			
@@ -1085,12 +1110,12 @@ while continuer:
 		tableau_box_munition.append(Caisse_munition())
 		cpt_spawn_box_munition = 1600
 	
-	for c in tableau_box_munition:
-		for l in joueur.tirs:
-			if pygame.sprite.collide_mask(c,l) != None:
-				joueur.tirs.remove(l)
-				if c in tableau_box_munition:
-					tableau_box_munition.remove(c)
+	#~ for c in tableau_box_munition:
+		#~ for l in joueur.tirs:
+			#~ if pygame.sprite.collide_mask(c,l) != None:
+				#~ joueur.tirs.remove(l)
+				#~ if c in tableau_box_munition:
+					#~ tableau_box_munition.remove(c)
 			
 	
 	for c in tableau_box_munition:
@@ -1383,6 +1408,10 @@ while continuer:
 	if espace_mode_mort == False:
 		Map.blit(joueur.image,joueur.rect)
 	
+	for l in joueur.tirs:
+		l.update()
+		Map.blit(l.image,l.rect)
+	
 	for c in tableau_box_munition:
 		c.update()
 	for c in tableau_box_munition:
@@ -1390,12 +1419,8 @@ while continuer:
 	
 	for a in asteroides:
 		a.update()
-	for l in joueur.tirs:
-		l.update()
 	for a in asteroides:
 		Map.blit(a.image,a.rect)
-	for l in joueur.tirs:
-		Map.blit(l.image,l.rect)
 	
 	
 	if espace_mode_mort == False:
