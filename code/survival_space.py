@@ -25,6 +25,8 @@ clock = pygame.time.Clock()
 black = pygame.Color(0,0,0)
 white = pygame.Color(255,255,255)
 space_blue = pygame.Color(0,155,178)#00BEBA
+red = pygame.Color(255,0,0)
+green = pygame.Color(29,255,0)
 
 ACCEL_VAISSEAU = 0.2
 VANG_VESSEAU = pi/60
@@ -54,7 +56,17 @@ munition_box_despawn = pygame.transform.scale(pygame.image.load("Data/Pictures/c
 
 player1 = pygame.image.load("Data/Pictures/vaisseau.png")
 player1_gauche = pygame.image.load("Data/Pictures/vaisseau_gauche.png")
+player1_gauche_propulsion = pygame.image.load("Data/Pictures/vaisseau_gauche_propulsion.png")
+player1_droite_propulsion = pygame.image.load("Data/Pictures/vaisseau_droite_propulsion.png")
 player1_droite = pygame.image.load("Data/Pictures/vaisseau_droite.png")
+player1_propulsion1 = pygame.image.load("Data/Pictures/sprite/vaisseau_propulsion1.png")
+player1_propulsion2 = pygame.image.load("Data/Pictures/sprite/vaisseau_propulsion2.png")
+player1_propulsion3 = pygame.image.load("Data/Pictures/sprite/vaisseau_propulsion3.png")
+
+fire1 = pygame.image.load("Data/Pictures/sprite/fire1.png")
+fire2 = pygame.image.load("Data/Pictures/sprite/fire2.png")
+fire3 = pygame.image.load("Data/Pictures/sprite/fire3.png")
+
 asteoride = pygame.image.load("Data/Pictures/Asteroid.png")
 laser = pygame.image.load("Data/Pictures/laser.png")
 logo_munition = pygame.image.load("Data/Pictures/logo_munition.png")
@@ -109,7 +121,6 @@ def lire_fichier_coins(fichier):
 	
 	with open(fichier,"r") as fichier:
 		total_coins = fichier.readline().strip()
-		print(total_coins, type(total_coins))
 		
 	return int(total_coins)
 
@@ -220,39 +231,82 @@ class J1(pygame.sprite.Sprite):
 	
 	tourner_gauche = False
 	tourner_droite = False
+	accelere = False
 	cpt = 0
+	cpt_animation = 0
 	MUNITION = 500
 	
 	def __init__(self):
 		self.x, self.y = 0,500
+		self.lx, self.ly = self.x,self.y
 		self.vx, self.vy = 0,0
 		self.angle = 0
 		self.tirs = []
 		self.tourner_gauche = False
 		self.tourner_droite = False
 		
+		self.hp = 100
+		
+		self.image1 = player1
+		
 		pygame.sprite.Sprite.__init__(self)
 		self.update()
 	
 	def update(self):
+		self.lx, self.ly = self.x,self.y
+		
 		self.x = (self.x + self.vx)%1400
 		self.y = (self.y + self.vy)%1000
 		
-		if self.tourner_droite:
-			self.image = pygame.transform.rotate(player1_droite,rad2deg(self.angle))
-		if self.tourner_gauche:
-			self.image = pygame.transform.rotate(player1_gauche,rad2deg(self.angle))
+		if self.accelere:
+			self.cpt_animation += 1
 			
+			if self.cpt_animation == 1:
+				self.image1 = player1_propulsion1
+			if self.cpt_animation == 11:
+				self.image1 = player1_propulsion1
+			if self.cpt_animation == 21:
+				self.image1 = player1_propulsion3
+				self.cpt_animation = 0
+		else:
+			self.image1 = player1
+		
+		fire_1 = pygame.transform.rotate(fire1,rad2deg(self.angle))
+		fire_2 = pygame.transform.rotate(fire2,rad2deg(self.angle))
+		fire_3 = pygame.transform.rotate(fire3,rad2deg(self.angle))
+		
+		if self.tourner_droite:
+			if self.accelere == False:
+				self.image = pygame.transform.rotate(player1_droite,rad2deg(self.angle))
+			elif self.accelere:
+				self.image = pygame.transform.rotate(player1_droite_propulsion,rad2deg(self.angle))
+		if self.tourner_gauche:
+			if self.accelere == False:
+				self.image = pygame.transform.rotate(player1_gauche,rad2deg(self.angle))
+			elif self.accelere:
+				self.image = pygame.transform.rotate(player1_gauche_propulsion,rad2deg(self.angle))
+		
+		
 		if self.tourner_droite == False and self.tourner_gauche == False:
-			self.image = pygame.transform.rotate(player1,rad2deg(self.angle))
+			self.image = pygame.transform.rotate(self.image1,rad2deg(self.angle))
 		
 		self.rect = (int(self.x),int(self.y),self.image.get_width(),self.image.get_height())
 		self.mask = pygame.mask.from_surface(self.image)
 		
 		if self.vx > sMax:
 			self.vx = sMax
+		elif self.vx < -sMax:
+			self.vx = -sMax
+		
 		if self.vy > sMax:
 			self.vy = sMax 
+		elif self.vy < -sMax:
+			self.vy = -sMax
+		
+		
+		if self.hp > 1:
+			pygame.draw.rect(Map, red,(self.x,self.y-25,55,5))
+			pygame.draw.rect(Map, green,(self.x,self.y-25,self.hp/1.8,5))
 		
 	def accelerer(self):
 		self.vx -= ACCEL_VAISSEAU*cos(self.angle)
@@ -490,7 +544,7 @@ def animation_texte_difficulter():
 	
 		
 
-def remise_a_zero():
+def mort_reset():
 	global son_reacteur
 	global son_tire_laser
 	global asteroides
@@ -683,7 +737,7 @@ def reset():
 	triche = False
 	joueur.y = 500
 	score = 0
-	joueur.vx = -20
+	joueur.vx = 0
 	DIFFICULTER_TOTAL = 1
 	difficulter = 1
 	joueur.vy = 0
@@ -727,6 +781,8 @@ def interface_shop():
 	boutton_back2 = pygame.image.load("Data/Pictures/Bouttons/boutton_back_swagg.png")
 	boutton_back = boutton_back2
 	boutton_back_select = pygame.image.load("Data/Pictures/Bouttons/boutton_back_swagg_select.png")
+	
+	affiche_soon = arial7.render("COMING SOON",True,black)
 	
 	boutton_back_x = 1150
 	boutton_back_y = 800
@@ -796,6 +852,7 @@ def interface_shop():
 		pygame.draw.rect(Map,bleu_contour,(100,950, 700, 10))
 		pygame.draw.rect(Map,bleu_contour,(100,200, 710, 10))
 		Map.blit(boutton_back,(boutton_back_x,boutton_back_y))
+		Map.blit(affiche_soon,(200,400))
 		window.blit(Map,(0,0))
 		pygame.display.update()
 		clock.tick(100)
@@ -1086,15 +1143,17 @@ interface()
 
 
 
-cpt_music = 7200
 continuer_triche = False
 cpt_triche = 50
 
+cpt_collision = 0
+
 tableau_box_munition.append(Caisse_munition())
 
+tremblement_collision = False
 
 while continuer:
-	
+	music_end = pygame.mixer.music.get_busy()
 	
 	for c in tableau_box_munition:
 		if c.vx == 0:
@@ -1136,10 +1195,8 @@ while continuer:
 		e.image = etoile_img
 		e.xs = 0
 	
-	cpt_music -= 1
-	if cpt_music == 0:
+	if music_end == False:
 		pygame.mixer.music.play()
-		cpt_music = 8000
 	
 	temps_etoile -= 1
 	
@@ -1267,9 +1324,12 @@ while continuer:
 	
 	if appui[K_UP]:
 		joueur.accelerer()
+		joueur.accelere = True
 		x_Map = random.randint(-1,1)
 		y_Map = random.randint(-1,1)
 		son_reacteur.play()
+	else:
+		joueur.accelere = False
 	
 	if appui[K_r]:
 		joueur.ralentir()
@@ -1303,6 +1363,7 @@ while continuer:
 				espace_mode_mort = False
 				VIT_LASER = 10
 				cpt_mort = 100
+				joueur.hp = 100
 				explosion.cpt = 0
 				joueur.x = 700
 				cpt_tremblement = 15
@@ -1387,7 +1448,6 @@ while continuer:
 		if l.x < 0 or l.x > 1400 or l.y < 0 or l.y > 1000:
 			lasers_perdus.append(l)
 	
-	print(nb_coins)
 	
 	for a in asteroides_detruits:
 		if a in asteroides:
@@ -1435,26 +1495,64 @@ while continuer:
 	
 	if triche == False:
 		if espace_mode_mort == False:
+			if joueur.hp < 1:
+				pygame.mixer.music.stop()
+				son_tire_laser.stop()
+				coins_joueur += nb_coins
+				affiche_nb_coins = arial7.render("x "+str(coins_joueur),True,white)
+				enregistrer_coins("coins")
+				nb_coins = 0
+				son_reacteur.stop()
+				son_explosion2.play()
+				son_game_over.play()
+				espace_mode_mort = True
+				asteroides_detruits.append(a)
+				for a in asteroides_detruits:
+					if a in asteroides:
+						asteroides.remove(a)
+	
+	if triche == False:
+		if espace_mode_mort == False:
 			for a in asteroides:
 				if  pygame.sprite.collide_mask(a,joueur) != None:
-					pygame.mixer.music.stop()
-					son_tire_laser.stop()
-					coins_joueur += nb_coins
-					affiche_nb_coins = arial7.render("x "+str(coins_joueur),True,white)
-					enregistrer_coins("coins")
-					nb_coins = 0
-					son_reacteur.stop()
-					son_explosion2.play()
-					son_game_over.play()
-					espace_mode_mort = True
-					asteroides_detruits.append(a)
-					for a in asteroides_detruits:
-						if a in asteroides:
-							asteroides.remove(a)
+					for a in asteroides:
+						joueur.hp -= int(a.taille_x + a.taille_y)
+					cpt_collision += 1
+					tremblement_collision = True
+					if cpt_collision == 1:
+						if joueur.vx != 0 and joueur.vy != 0:
+							joueur.x, joueur.y = joueur.lx, joueur.ly
+							joueur.vx = -joueur.vx
+							joueur.vy = -joueur.vy
+						else:
+							for a in asteroides:
+								if a.vx < 0:
+									joueur.vx = a.vx - 5
+								elif a.vx > 0:
+									joueur.vx = a.vx + 5
+								if a.vy < 0:
+									joueur.vy = a.vy - 5
+								elif a.vy > 0:
+									joueur.vy = a.vy + 5
+							 
+				else:
+					cpt_collision = 0
+	
+	
+	if tremblement_collision:
+		if cpt_tremblement > 1:
+			x_Map = random.randint(-20,50)
+			y_Map = random.randint(-20,50)
+			cpt_tremblement -= 1
+		else:
+			tremblement_collision = False
+			x_Map = 0
+			cpt_tremblement = 25
+			y_Map = 0
 	
 	
 	if espace_mode_mort:
-		remise_a_zero()
+		mort_reset()
 		
 	
 	
