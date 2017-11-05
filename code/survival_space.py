@@ -1354,8 +1354,23 @@ while continuer:
 					if joueur.cpt > VIT_TIRS-NB_LASER_PAR_TIRS:
 						joueur.tirs.append(Laser(joueur))
 				son_tire_laser.play()
-	
-	
+
+	if appui[K_KP8]:
+		difficulter = 8
+	if appui[K_KP7]:
+		difficulter = 7
+	if appui[K_KP6]:
+		difficulter = 6
+	if appui[K_KP5]:
+		difficulter = 5
+	if appui[K_KP4]:
+		difficulter = 4
+	if appui[K_KP3]:
+		difficulter = 3
+	if appui[K_KP2]:
+		difficulter = 2
+	if appui[K_KP1]:
+		difficulter = 1
 	
 	if appui[K_BACKSPACE]:
 		if espace_mode_mort:
@@ -1411,6 +1426,8 @@ while continuer:
 				x_Map = 0
 				y_Map = 0
 				
+	
+	
 	
 	window.fill(black)
 	Map.fill(black)
@@ -1520,20 +1537,21 @@ while continuer:
 					cpt_collision += 1
 					tremblement_collision = True
 					if cpt_collision == 1:
-						if joueur.vx != 0 and joueur.vy != 0:
-							joueur.x, joueur.y = joueur.lx, joueur.ly
-							joueur.vx = -joueur.vx
-							joueur.vy = -joueur.vy
+						if joueur.vx != 0 and joueur.vx != 1 and joueur.vx != -1 and joueur.vx != 2 and joueur.vx != -2:
+							if joueur.vy != 0 and joueur.vy != 1 and joueur.vy != -1 and joueur.vy != 2 and joueur.vy != -2:
+								joueur.x, joueur.y = joueur.lx, joueur.ly
+								joueur.vx = -joueur.vx
+								joueur.vy = -joueur.vy
 						else:
 							for a in asteroides:
 								if a.vx < 0:
-									joueur.vx = a.vx - 5
+									joueur.vx = a.vx - 10
 								elif a.vx > 0:
-									joueur.vx = a.vx + 5
+									joueur.vx = a.vx + 10
 								if a.vy < 0:
-									joueur.vy = a.vy - 5
+									joueur.vy = a.vy - 10
 								elif a.vy > 0:
-									joueur.vy = a.vy + 5
+									joueur.vy = a.vy + 10
 							 
 				else:
 					cpt_collision = 0
